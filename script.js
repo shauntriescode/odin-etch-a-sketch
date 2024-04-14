@@ -1,4 +1,3 @@
-// NEED TO PUT THE RGB VALUE IN A FOR EACH LOOP SO EACH SQUARE IS DIFFERENT
 
 // Variables
 const container = document.querySelector('.container');
@@ -13,15 +12,20 @@ const getRandomRGB = function (min, max) {
   return min + Math.floor(Math.random() * (max - min + 1))
 };
 
+// Opacity
+const darkenOpacity = function () {
+
+}
+
+// Create Grid Function
+function createGrid(container, numberOfSquares) {
+  for (let i = 0; i < numberOfSquares; i++) {
+  // Random RGB
   const r = getRandomRGB(0, 255);
   const g = getRandomRGB(0, 255);
   const b = getRandomRGB(0, 255);
   const randomRGB = `${r},${g},${b}`
 
-
-// Create Grid Function
-function createGrid(container, numberOfSquares) {
-  for (let i = 0; i < numberOfSquares; i++) {
   // Create each square
   const square = document.createElement('div');
   square.classList.add('square');
@@ -29,15 +33,42 @@ function createGrid(container, numberOfSquares) {
   // Style
   square.style.width = `calc(100% / ${gridHeight})`
   square.style.height = `calc(100% / ${gridWidth})`
-  square.style.backgroundColor = '#111'
+  square.style.backgroundColor = 'rgb(${randomRGB})'
   square.style.flexGrow = '1';
   square.style.flexBasis = 'auto';
 
-  // Event Listener
+  // Opacity Decrement
+  const opacityDecrement = 1 / 10;
+
+
+  // Event Listeners
   square.addEventListener('mouseover', () => {
-    square.style.backgroundColor = `rgb(${randomRGB})`
-    });
-  
+    // Random RBG
+    square.style.backgroundColor = `rgb(${randomRGB})`;
+
+    // Opacity
+    const currentSquare = event.target;
+    const computedStyle = window.getComputedStyle(currentSquare);
+    let opacity = computedStyle.getPropertyValue('opacity');
+
+    // Makes sure it begins at full opacity
+    if (opacity === '') {
+      opacity = '1'
+    }
+
+
+      let opacityAsNum = parseFloat(opacity);
+
+      opacityAsNum -= opacityDecrement;
+
+      if (opacityAsNum < 0) {
+        opacityAsNum = 0;
+      }
+      square.style.opacity = opacityAsNum.toString()
+    
+  });
+
+
   // Append to container
   container.appendChild(square);
     };
@@ -64,12 +95,9 @@ btn.addEventListener('click', () => {
   };
 });
 
-
-
-
 // Calling function
 createGrid(container, numberOfSquares);
-console.log(randomRGB);
+
 
 
 
